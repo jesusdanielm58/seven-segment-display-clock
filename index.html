@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>seven-segment display clock</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+	<style type="text/css">
+		body{
+			background-image: linear-gradient(#35495e,#41b883);
+			background-size:auto,cover;
+			background-attachment: fixed;
+			margin: 0;
+		}
+		#main{
+			padding: 20px;
+			background-color: black;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+		.segment{
+			height: 40px;
+			width: 8px;
+			background-color: #333333;
+			border-radius: 50px;
+			transition: 0.2s
+		}
+		.horizontal{
+			width: 40px;
+			height: 8px;
+			margin: auto;
+		}
+		.number{
+			width: 50px;
+			margin-right: 3%;
+		}
+		.side{
+			display: flex;
+			justify-content: space-between;
+		}
+		.active{
+			background-color: #333333;
+			background-color: red;
+		}
+		.point{
+			width: 15px;
+			height: 15px;
+			border-radius: 50%;
+			background-color:red;
+			margin-right: 3%;
+		}
+
+	</style>
+</head>
+<body>
+	<div id="main">
+		<numero v-bind:num="hours"></numero>
+		<numero v-bind:num="hours2"></numero>
+		<div class="point"></div>
+		<numero v-bind:num="minutes"></numero>
+		<numero v-bind:num="minutes2"></numero>
+		<div class="point"></div>
+		<numero v-bind:num="seconds"></numero>
+		<numero v-bind:num="seconds2"></numero>
+	</div>
+	<script type="text/javascript">
+		Vue.component('numero',{
+			props:["num"],
+			data:function(){
+				return{
+					numeros:[[1,1,1,1,1,1,0],[0,1,1,0,0,0,0],[1,1,0,1,1,0,1],[1,1,1,1,0,0,1],[0,1,1,0,0,1,1],[1,0,1,1,0,1,1],[1,0,1,1,1,1,1],[1,1,1,0,0,0,0],[1,1,1,1,1,1,1],[1,1,1,1,0,1,1]]
+				}
+			},template:`
+			<div class="number">
+				<div class="segment horizontal" v-bind:class="{active:luces[0]}"></div>
+				<div class="side">
+					<div class="segment" v-bind:class="{active:luces[5]}"></div>
+					<div class="segment" v-bind:class="{active:luces[1]}"></div>
+				</div>
+				<div class="segment horizontal" v-bind:class="{active:luces[6]}"></div>
+				<div class="side">
+					<div class="segment" v-bind:class="{active:luces[4]}"></div>
+					<div class="segment" v-bind:class="{active:luces[2]}"></div>
+				</div>
+				<div class="segment horizontal" v-bind:class="{active:luces[3]}"></div>
+			</div>`
+			,computed:{
+				luces:function (){
+					return this.numeros[this.num]
+				}
+			}
+		})
+		new Vue({
+			el:"#main",
+			created(){
+				setInterval(()=>{
+				this.actualizar()
+				},1000)
+			},
+			data:{
+				date:0,
+				hours:0,
+				hours2:0,
+				minutes:0,
+				minutes2:0,
+				seconds:0,
+				seconds2:0
+			},methods:{
+            actualizar: function () {
+	            this.date=new Date();
+	            this.hours=this.date.getHours();
+				this.hours2=this.hours%10;
+				this.hours=Math.floor(this.hours/10);
+				this.minutes=this.date.getMinutes();
+				this.minutes2=this.minutes%10;
+				this.minutes=Math.floor(this.minutes/10);
+				this.seconds=this.date.getSeconds();
+				this.seconds2=this.seconds%10;
+				this.seconds=Math.floor(this.seconds/10);
+			}
+			},mounted() {
+				this.actualizar();
+			}
+	})
+	</script>
+</body>
+</html>
